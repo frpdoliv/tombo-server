@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
     {
         return $this->shouldReturnJson($request, $exception)
             ? response()->json(
-                (new UnauthorizedProblem($request, $exception->getMessage())),
+                (new UnauthorizedProblem($request, $exception->getMessage()))->toArray(),
                 UnauthorizedProblem::$status
             )
             : redirect()->guest($exception->redirectTo() ?? route('login'));
