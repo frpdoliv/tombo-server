@@ -2,6 +2,8 @@
 
 namespace App\Exceptions;
 
+use App\Http\Problems\UnprocessableEntityProblem;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -37,5 +39,20 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Convert a validation exception into a JSON response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Validation\ValidationException  $exception
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function invalidJson($request, ValidationException $exception)
+    {
+        return response()->json(
+            (new UnprocessableEntityProblem($request, $exception->getMessage(), $exception->errors()))->toArray(),
+            UnprocessableEntityProblem::$status
+        );
     }
 }
