@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use App\Http\Problems\UnauthorizedProblem;
 use App\Http\Problems\UnprocessableEntityProblem;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
@@ -39,6 +41,23 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Convert an authentication exception into a response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Auth\AuthenticationException  $exception
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        return $this->shouldReturnJson($request, $exception)
+            ? response()->json(
+                (new UnauthorizedProblem($request, $exception->getMessage())),
+                UnauthorizedProblem::$status
+            )
+            : redirect()->guest($exception->redirectTo() ?? route('login'));
     }
 
     /**
