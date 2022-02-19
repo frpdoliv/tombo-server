@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
 use Illuminate\Http\Request;
@@ -20,4 +21,6 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::resource('authors', AuthorController::class);
 
     Route::resource('categories', CategoryController::class);
+
+    Route::resource('locations', LocationController::class);
 });
