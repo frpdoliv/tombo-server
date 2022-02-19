@@ -9,6 +9,16 @@ class Category extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'user_id'
+    ];
+
     public function books()
     {
         return $this->hasMany(Book::class);
