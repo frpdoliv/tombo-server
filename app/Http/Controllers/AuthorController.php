@@ -12,6 +12,16 @@ class AuthorController extends Controller
 {
     private static int $DEFAULT_N_PAGE_RECORDS = 100;
 
+    private static function makeNotFoundResponse(Author $author) {
+        return response()->json(
+            (new NotFoundProblem(
+                request(),
+                __('messages.not_found.author', ['name' => $author->name])
+            ))->toArray(),
+            NotFoundProblem::$status
+        );
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -57,10 +67,7 @@ class AuthorController extends Controller
         if ($author->user_id === Auth::id()) {
             return response()->json($author);
         }
-        return response()->json(
-            (new NotFoundProblem(request(), __('Author error')))->toArray(),
-            NotFoundProblem::$status
-        );
+        return self::makeNotFoundResponse($author);
     }
 
     /**
@@ -87,10 +94,7 @@ class AuthorController extends Controller
             return response()->json('', 204);
         }
 
-        return response()->json(
-            (new NotFoundProblem(request(), __('Author error')))->toArray(),
-            NotFoundProblem::$status
-        );
+        return self::makeNotFoundResponse($author);
     }
 
     /**
@@ -107,9 +111,6 @@ class AuthorController extends Controller
             return response()->json('', 204);
         }
 
-        return response()->json(
-            (new NotFoundProblem(request(), __('Author error')))->toArray(),
-            NotFoundProblem::$status
-        );
+        return self::makeNotFoundResponse($author);
     }
 }

@@ -12,6 +12,16 @@ class CategoryController extends Controller
 {
     private static int $DEFAULT_N_PAGE_RECORDS = 100;
 
+    private static function makeNotFoundResponse(Category $category) {
+        return response()->json(
+            (new NotFoundProblem(
+                request(),
+                __('messages.not_found.category', ['name' => $category->name])
+            ))->toArray(),
+            NotFoundProblem::$status
+        );
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -56,10 +66,7 @@ class CategoryController extends Controller
             return response()->json($category);
         }
 
-        return response()->json(
-            (new NotFoundProblem(request(), __('Author error')))->toArray(),
-            NotFoundProblem::$status
-        );
+        return self::makeNotFoundResponse($category);
     }
 
     /**
@@ -84,10 +91,7 @@ class CategoryController extends Controller
             return response()->json('', 204);
         }
 
-        return response()->json(
-            (new NotFoundProblem(request(), __('Author error')))->toArray(),
-            NotFoundProblem::$status
-        );
+        return self::makeNotFoundResponse($category);
     }
 
     /**
@@ -103,9 +107,6 @@ class CategoryController extends Controller
             return response()->json('', 204);
         }
 
-        return response()->json(
-            (new NotFoundProblem(request(), __('Author error')))->toArray(),
-            NotFoundProblem::$status
-        );
+        return self::makeNotFoundResponse($category);
     }
 }
