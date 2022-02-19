@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Problems\NotFoundProblem;
 use App\Models\Author;
+use App\Rules\UniqueNameInUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,7 +33,7 @@ class AuthorController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => ['required'],
+            'name' => ['required', new UniqueNameInUser(Auth::user())],
             'birthdate' => ['date', 'before:today', 'nullable'],
             'birthplace' => ['max:255', 'nullable'],
         ]);
