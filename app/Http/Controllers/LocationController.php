@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Problems\NotFoundProblem;
-use App\Models\Category;
 use App\Models\Location;
 use App\Rules\UniqueNameInUser;
 use Illuminate\Http\Request;
@@ -11,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class LocationController extends Controller
 {
+    private static int $DEFAULT_N_PAGE_RECORDS = 100;
+
     private static function makeNotFoundResponse(Location $location) {
         return response()->json(
             (new NotFoundProblem(
@@ -44,7 +45,7 @@ class LocationController extends Controller
             'name' => ['required', 'max:255', new UniqueNameInUser(Auth::user())],
         ]);
 
-        Category::create([
+        Location::create([
             ...$validatedData,
             'user_id' => Auth::id()
         ]);
@@ -76,13 +77,13 @@ class LocationController extends Controller
      */
     public function update(Request $request, Location $location)
     {
-        if (Auth::id() === $category->user_id) {
+        if (Auth::id() === $location->user_id) {
             $validatedData = $request->validate([
                 'name' => ['required', 'max:255'],
             ]);
 
-            Category::updateOrCreate(
-                $category->toArray(),
+            Location::updateOrCreate(
+                $location->toArray(),
                 $validatedData
             );
 
