@@ -2,11 +2,13 @@
 
 namespace App\Exceptions;
 
+use App\Http\Problems\NotFoundProblem;
 use App\Http\Problems\UnauthorizedProblem;
 use App\Http\Problems\UnprocessableEntityProblem;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -38,8 +40,11 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            return response()->json(
+                (new NotFoundProblem($request, __('Resource in specified route not found')))->toArray(),
+                NotFoundProblem::$status
+            );
         });
     }
 
