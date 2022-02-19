@@ -42,7 +42,7 @@ class Handler extends ExceptionHandler
     {
         $this->renderable(function (NotFoundHttpException $e, $request) {
             return response()->json(
-                (new NotFoundProblem($request, __('Resource in specified route not found')))->toArray(),
+                (new NotFoundProblem($request, __('Resource specified in route not found')))->toArray(),
                 NotFoundProblem::$status
             );
         });
