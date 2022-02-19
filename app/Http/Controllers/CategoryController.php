@@ -43,7 +43,11 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => ['required', 'max:255', new UniqueNameInUser(Auth::user())],
+            'name' => [
+                'required',
+                'max:255',
+                new UniqueNameInUser(Auth::user()->categories())
+            ],
         ]);
 
         Category::create([
@@ -80,7 +84,11 @@ class CategoryController extends Controller
     {
         if (Auth::id() === $category->user_id) {
             $validatedData = $request->validate([
-                'name' => ['required', 'max:255'],
+                'name' => [
+                    'required',
+                    'max:255',
+                    Auth::user()->categories()
+                ],
             ]);
 
             Category::updateOrCreate(

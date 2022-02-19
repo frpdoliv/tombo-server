@@ -43,7 +43,11 @@ class AuthorController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => ['required', new UniqueNameInUser(Auth::user())],
+            'name' => [
+                'required',
+                'max:255',
+                new UniqueNameInUser(Auth::user()->authors())
+            ],
             'birthdate' => ['date', 'before:today', 'nullable'],
             'birthplace' => ['max:255', 'nullable'],
         ]);
@@ -81,7 +85,11 @@ class AuthorController extends Controller
     {
         if ($author->user_id === Auth::id()) {
             $validatedData = $request->validate([
-                'name' => ['nullable'],
+                'name' => [
+                    'nullable',
+                    'max:255',
+                    Auth::user()->authors()
+                ],
                 'birthdate' => ['date', 'before:today', 'nullable'],
                 'birthplace' => ['max:255', 'nullable'],
             ]);

@@ -3,20 +3,21 @@
 namespace App\Rules;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Contracts\Validation\Rule;
 
 class UniqueNameInUser implements Rule
 {
-    private User $user;
+    private Relation $relation;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct(User $loggedUser)
+    public function __construct(Relation $relation)
     {
-        $this->user = $loggedUser;
+        $this->relation = $relation;
     }
 
     /**
@@ -28,7 +29,7 @@ class UniqueNameInUser implements Rule
      */
     public function passes($attribute, $value)
     {
-        return !$this->user->categories()->where('name', $value)->exists();
+        return !$this->relation->where('name', $value)->exists();
     }
 
     /**

@@ -25,6 +25,7 @@ class LocationController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
@@ -42,7 +43,10 @@ class LocationController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => ['required', 'max:255', new UniqueNameInUser(Auth::user())],
+            'name' => ['required',
+                'max:255',
+                new UniqueNameInUser(Auth::user()->locations())
+            ],
         ]);
 
         Location::create([
